@@ -21,7 +21,9 @@ services:
       retries: 5
 
   metabase:
-    image: metabase/metabase:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: marketing_metabase
     restart: unless-stopped
     depends_on:
@@ -36,6 +38,7 @@ services:
       MB_DB_HOST: postgres
       MB_SITE_NAME: "Marketing Analytics"
       JAVA_TIMEZONE: Asia/Bangkok
+      DATABASE_URL: postgresql://${POSTGRES_USER:-marketing}:${POSTGRES_PASSWORD:-marketing_pass}@postgres:5432/${POSTGRES_DB:-marketing}
     ports:
       - "3000:3000"
     volumes:
@@ -55,7 +58,7 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-marketing}:${POSTGRES_PASSWORD:-marketing_pass}@postgres:5432/${POSTGRES_DB:-marketing}
     ports:
-      - "3001:3001"
+      - "4000:3001"
 
   etl:
     build:
