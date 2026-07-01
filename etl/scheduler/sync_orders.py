@@ -1,12 +1,11 @@
 """
-Sync orders from all platforms into ecommerce.orders
+Sync TikTok Shop orders into ecommerce.orders
 """
 import time
-import pendulum
 import structlog
 from sqlalchemy import text
 from models.base import SessionLocal
-from connectors import shopee, lazada, tiktok
+from connectors import tiktok
 from config import settings
 
 log = structlog.get_logger(__name__)
@@ -215,7 +214,5 @@ def sync_tiktok_orders(hours_back: int = 2):
 
 def run():
     log.info("sync.orders.start")
-    sync_shopee_orders()
-    sync_lazada_orders()
     sync_tiktok_orders()
     log.info("sync.orders.complete")

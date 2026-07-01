@@ -57,25 +57,14 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-marketing}:${POSTGRES_PASSWORD:-marketing_pass}@postgres:5432/${POSTGRES_DB:-marketing}
-      # Shopee
-      SHOPEE_PARTNER_ID: ${SHOPEE_PARTNER_ID}
-      SHOPEE_PARTNER_KEY: ${SHOPEE_PARTNER_KEY}
-      SHOPEE_SHOP_ID: ${SHOPEE_SHOP_ID}
-      SHOPEE_ACCESS_TOKEN: ${SHOPEE_ACCESS_TOKEN}
-      # Lazada
-      LAZADA_APP_KEY: ${LAZADA_APP_KEY}
-      LAZADA_APP_SECRET: ${LAZADA_APP_SECRET}
-      LAZADA_ACCESS_TOKEN: ${LAZADA_ACCESS_TOKEN}
-      LAZADA_COUNTRY: ${LAZADA_COUNTRY:-TH}
       # TikTok Shop
       TIKTOK_APP_KEY: ${TIKTOK_APP_KEY}
       TIKTOK_APP_SECRET: ${TIKTOK_APP_SECRET}
       TIKTOK_SHOP_ID: ${TIKTOK_SHOP_ID}
       TIKTOK_ACCESS_TOKEN: ${TIKTOK_ACCESS_TOKEN}
-      # Schedule (cron expressions)
+      TIKTOK_REFRESH_TOKEN: ${TIKTOK_REFRESH_TOKEN}
+      # Schedule
       SYNC_ORDERS_CRON: ${SYNC_ORDERS_CRON:-0 * * * *}
-      SYNC_PRODUCTS_CRON: ${SYNC_PRODUCTS_CRON:-0 */4 * * *}
-      SYNC_ADS_CRON: ${SYNC_ADS_CRON:-30 * * * *}
     volumes:
       - etl_logs:/app/logs
 

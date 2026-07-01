@@ -1,6 +1,6 @@
 """
 Marketing Analytics ETL Service
-Schedules sync jobs for Shopee, Lazada, and TikTok Shop
+Schedules sync jobs for TikTok Shop
 """
 import sys
 import structlog
@@ -36,7 +36,7 @@ def main():
             day_of_week=parts[4] if len(parts) > 4 else "*",
         )
 
-    scheduler.add_job(sync_orders, _cron(settings.sync_orders_cron), id="sync_orders", name="Sync Orders (All Platforms)")
+    scheduler.add_job(sync_orders, _cron(settings.sync_orders_cron), id="sync_orders", name="Sync Orders (TikTok Shop)")
 
     log.info("scheduler.jobs", count=len(scheduler.get_jobs()))
 
