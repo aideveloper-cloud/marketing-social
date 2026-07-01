@@ -189,6 +189,13 @@ export function MainNavbarView({
             >
               {t`Home`}
             </PaddedSidebarLink>
+            <PaddedSidebarLink
+              isSelected={nonEntityItem?.url === "/marketing"}
+              icon="bar"
+              url="/marketing"
+            >
+              {t`Marketing`}
+            </PaddedSidebarLink>
           </SidebarSection>
 
           {shouldDisplayGettingStarted && (
