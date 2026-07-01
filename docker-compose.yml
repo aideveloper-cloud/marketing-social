@@ -20,11 +20,34 @@ services:
       timeout: 5s
       retries: 5
 
-  dashboard:
+  metabase:
+    image: metabase/metabase:latest
+    container_name: marketing_metabase
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: ${POSTGRES_DB:-marketing}
+      MB_DB_PORT: 5432
+      MB_DB_USER: ${POSTGRES_USER:-marketing}
+      MB_DB_PASS: ${POSTGRES_PASSWORD:-marketing_pass}
+      MB_DB_HOST: postgres
+      MB_SITE_NAME: "Marketing Analytics"
+      JAVA_TIMEZONE: Asia/Bangkok
+    ports:
+      - "3000:3000"
+    volumes:
+      - metabase_data:/metabase-data
+
+  # Custom marketing dashboard — lightweight Node.js page
+  # Access at http://localhost:3001
+  marketing:
     build:
-      context: ./dashboard
+      context: ./marketing-page
       dockerfile: Dockerfile
-    container_name: marketing_dashboard
+    container_name: marketing_page
     restart: unless-stopped
     depends_on:
       postgres:
@@ -32,7 +55,7 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-marketing}:${POSTGRES_PASSWORD:-marketing_pass}@postgres:5432/${POSTGRES_DB:-marketing}
     ports:
-      - "3000:3000"
+      - "3001:3001"
 
   etl:
     build:
@@ -45,17 +68,16 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-marketing}:${POSTGRES_PASSWORD:-marketing_pass}@postgres:5432/${POSTGRES_DB:-marketing}
-      # TikTok Shop
       TIKTOK_APP_KEY: ${TIKTOK_APP_KEY}
       TIKTOK_APP_SECRET: ${TIKTOK_APP_SECRET}
       TIKTOK_SHOP_ID: ${TIKTOK_SHOP_ID}
       TIKTOK_ACCESS_TOKEN: ${TIKTOK_ACCESS_TOKEN}
       TIKTOK_REFRESH_TOKEN: ${TIKTOK_REFRESH_TOKEN}
-      # Schedule
       SYNC_ORDERS_CRON: ${SYNC_ORDERS_CRON:-0 * * * *}
     volumes:
       - etl_logs:/app/logs
 
 volumes:
   postgres_data:
+  metabase_data:
   etl_logs:
