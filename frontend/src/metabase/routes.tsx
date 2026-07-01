@@ -149,18 +149,11 @@ export const getRoutes = (store: AppStore) => {
         <Route component={IsAuthenticated}>
           {getMetabotRoutes()}
 
-          {/* The global all hands routes, things in here are for all the folks */}
+          {/* Redirect root to Marketing dashboard */}
           <Route
             path="/"
-            component={HomePage}
-            onEnter={(nextState, replace) => {
-              const page = PLUGIN_LANDING_PAGE.getLandingPage();
-              if (page && page !== "/") {
-                replace({
-                  pathname: page.startsWith("/") ? page : `/${page}`,
-                  state: { preserveNavbarState: true },
-                });
-              }
+            onEnter={(_nextState, replace) => {
+              replace({ pathname: "/marketing", state: { preserveNavbarState: true } });
             }}
           />
 
