@@ -46,6 +46,25 @@ services:
       timeout: 10s
       retries: 5
 
+  setup:
+    build:
+      context: ./etl
+      dockerfile: Dockerfile
+    container_name: marketing_setup
+    restart: "no"
+    depends_on:
+      metabase:
+        condition: service_healthy
+    environment:
+      METABASE_URL: http://metabase:3000
+      MB_ADMIN_EMAIL: ${MB_ADMIN_EMAIL:-admin@marketing.local}
+      MB_ADMIN_PASSWORD: ${MB_ADMIN_PASSWORD:-marketing1234!}
+      MB_DB_HOST: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-marketing}
+      POSTGRES_USER: ${POSTGRES_USER:-marketing}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-marketing_pass}
+    command: ["python", "setup_metabase.py"]
+
   etl:
     build:
       context: ./etl
